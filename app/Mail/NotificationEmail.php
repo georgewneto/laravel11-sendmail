@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,17 +12,41 @@ class NotificationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $emailData;
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(
+        public array $emailData
+    ) {}
 
-    public function __construct($emailData)
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
     {
-        $this->emailData = $emailData;
+        return new Envelope(
+            subject: $this->emailData['subject'] ?? 'Notificação',
+        );
     }
 
-    public function build()
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
     {
-        return $this->subject($this->emailData['subject'])
-                    ->view('emails.notification')
-                    ->with('data', $this->emailData);
+        return new Content(
+            view: 'emails.notification',
+            with: ['data' => $this->emailData],
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

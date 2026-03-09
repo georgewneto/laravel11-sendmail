@@ -1,0 +1,128 @@
+# ========================================
+# SETUP INICIAL - Sistema Multi-SMTP
+# ========================================
+
+# 1. Executar migrations
+php artisan migrate
+
+# 2. Popular contas SMTP de exemplo
+php artisan db:seed --class=SmtpAccountSeeder
+
+# 3. Verificar se as migrations rodaram corretamente
+php artisan migrate:status
+
+# ========================================
+# CONFIGURAÇÃO DE CONTAS SMTP REAIS
+# ========================================
+
+# Editar conta 1 (Gmail exemplo)
+# Substitua com suas credenciais reais no banco de dados ou execute:
+php artisan tinker
+# Depois dentro do tinker:
+# $account = App\Models\SmtpAccount::find(1);
+# $account->username = 'seu-email@gmail.com';
+# $account->password = 'sua-senha-app-gmail';
+# $account->from_email = 'seu-email@gmail.com';
+# $account->save();
+# exit
+
+# ========================================
+# INICIAR SERVIÇOS
+# ========================================
+
+# Terminal 1: Iniciar queue worker
+php artisan queue:work --tries=1 --timeout=60
+
+# Terminal 2: Iniciar aplicação (se necessário)
+# php artisan serve
+
+# ========================================
+# COMANDOS ÚTEIS
+# ========================================
+
+# Processar emails pendentes manualmente
+php artisan email:process-pending
+
+# Ver lista de jobs na fila
+php artisan queue:work --once
+
+# Limpar jobs falhados
+php artisan queue:flush
+
+# Ver logs em tempo real
+# Windows PowerShell:
+Get-Content storage/logs/laravel.log -Tail 50 -Wait
+
+# Linux/Mac:
+# tail -f storage/logs/laravel.log
+
+# ========================================
+# TESTES
+# ========================================
+
+# Testar envio de email via API (ajuste o token JWT)
+# curl -X POST http://localhost:8000/api/store `
+#   -H "Authorization: Bearer SEU_TOKEN_JWT" `
+#   -H "Content-Type: application/json" `
+#   -d '{
+#     "email_destino": "teste@exemplo.com",
+#     "assunto": "Teste",
+#     "corpo": "Conteúdo do email",
+#     "from_email": "principal@empresa.com"
+#   }'
+
+# Verificar status da mensagem
+# curl -X GET http://localhost:8000/api/messages/1/status `
+#   -H "Authorization: Bearer SEU_TOKEN_JWT"
+
+# Ver estatísticas das contas SMTP
+# curl -X GET http://localhost:8000/api/smtp-accounts/stats `
+#   -H "Authorization: Bearer SEU_TOKEN_JWT"
+
+# ========================================
+# VERIFICAR BANCO DE DADOS
+# ========================================
+
+# Conectar ao banco
+php artisan tinker
+
+# Ver todas as contas SMTP
+# App\Models\SmtpAccount::all();
+
+# Ver mensagens pendentes
+# App\Models\Mensagem::where('status', 'pending')->get();
+
+# Ver tentativas de uma mensagem
+# App\Models\Mensagem::find(1)->emailSendAttempts;
+
+# ========================================
+# PRODUÇÃO - Configurar Supervisor
+# ========================================
+
+# Criar arquivo de configuração do Supervisor
+# /etc/supervisor/conf.d/laravel-worker.conf
+#
+# [program:laravel-worker]
+# process_name=%(program_name)s_%(process_num)02d
+# command=php /caminho/completo/artisan queue:work --sleep=3 --tries=1 --max-time=3600
+# autostart=true
+# autorestart=true
+# stopasgroup=true
+# killasgroup=true
+# user=www-data
+# numprocs=1
+# redirect_stderr=true
+# stdout_logfile=/caminho/completo/storage/logs/worker.log
+# stopwaitsecs=3600
+
+# Recarregar Supervisor
+# sudo supervisorctl reread
+# sudo supervisorctl update
+# sudo supervisorctl start laravel-worker:*
+
+# ========================================
+# PRODUÇÃO - Configurar Cron
+# ========================================
+
+# Adicionar ao crontab (crontab -e):
+# * * * * * cd /caminho/completo && php artisan schedule:run >> /dev/null 2>&1

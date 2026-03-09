@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,21 +12,41 @@ class SendEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $emailData;
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(
+        public array $emailData
+    ) {}
 
-    public function __construct($emailData)
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
     {
-        $this->emailData = $emailData;
+        return new Envelope(
+            subject: $this->emailData['subject'] ?? 'Email',
+        );
     }
 
-    public function build()
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
     {
-        /*
-        return $this->view('emails.email_template')
-                    ->subject('Bem-vindo ao SeuApp');
-        */
-        return $this->view('emails.email_template')
-                    ->subject($this->emailData['subject'])
-                    ->with('data', $this->emailData);
+        return new Content(
+            view: 'emails.email_template',
+            with: ['data' => $this->emailData],
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }
