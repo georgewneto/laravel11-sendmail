@@ -49,16 +49,16 @@ RUN chmod -R 777 /var/www/storage/logs/laravel.log
 RUN chmod -R 777 /var/www/storage/framework/sessions/
 RUN chmod -R 777 /var/www/storage/framework/views/
 
+# Create entrypoint script to run both API and queue worker
+RUN echo '#!/bin/bash\n\
+php artisan serve --host=0.0.0.0 --port=8009 &\n\
+php artisan queue:work --tries=1 --timeout=60 --sleep=3 --max-time=3600\n\
+' > /var/www/start.sh && chmod +x /var/www/start.sh && chown www:www /var/www/start.sh
+
 # Change the current user to www
 USER www
 
 # Expose the port and start the PHP built-in server
 EXPOSE 8009
-
-# Create entrypoint script to run both API and queue worker
-RUN echo '#!/bin/bash\n\
-php artisan serve --host=0.0.0.0 --port=8009 &\n\
-php artisan queue:work --tries=1 --timeout=60 --sleep=3 --max-time=3600\n\
-' > /var/www/start.sh && chmod +x /var/www/start.sh
 
 CMD ["/bin/bash", "/var/www/start.sh"]
