@@ -23,7 +23,7 @@
         .header {
             text-align: center;
             padding: 10px;
-            background-color: #0173B9;
+            background-color: #fff;
             color: #ffffff;
             font-size: 24px;
             border-radius: 5px 5px 0 0;
@@ -44,8 +44,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <img src="http://187.44.149.123:8089/images/logo-PMI-2021.jpg" width="300" border="0" /><br />
+        <div class="header" style="line-height: 2;">
+            <img src="https://publico.tributositabuna.com.br/files/images/logo_031.svg" width="300" border="0" /><br />
             @yield('header', 'Título do Email')
         </div>
 
@@ -53,7 +53,7 @@
             @yield('content')
         </div>
 
-        <div class="footer">
+        <div class="footer" style="line-height: 2;">
             <!--
             yield('footer', '© ' . date('Y') . ' Prefeitura Municipal de Itabuna<br />Desenvolvido pelo <b>DIT</b> | Departamento de Inovação e Tecnologia')
             -->
