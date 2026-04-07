@@ -45,7 +45,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="http://187.44.149.123:8089/images/logo-PMI-2021.jpg" width="300" border="0" /><br />
+            <img src="https://processoseletivo.itabuna.ba.gov.br/images/logomarca_amarelo_preto_horizontal.png" width="300" border="0" /><br />
             @yield('header', 'Título do Email')
         </div>
 
