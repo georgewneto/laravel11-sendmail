@@ -36,6 +36,15 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+
+# Criar a pasta /var/www/storage/jwt com as permissões corretas
+RUN mkdir -p /var/www/storage/jwt && chown -R www:www /var/www/storage/jwt && chmod -R 777 /var/www/storage/jwt
+
+# Copia as chaves JWT para o container
+COPY /home/georgewneto/Projetos/sendmail/storage/jwt/jwt-private.key /var/www/storage/jwt/
+COPY /home/georgewneto/Projetos/sendmail/storage/jwt/jwt-public.key /var/www/storage/jwt/
+
+
 # Add user for the application
 RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 
@@ -48,6 +57,11 @@ RUN chmod -R 777 /var/www/storage/app/public
 #RUN chmod -R 777 /var/www/storage/logs/laravel.log
 RUN chmod -R 777 /var/www/storage/framework/sessions/
 RUN chmod -R 777 /var/www/storage/framework/views/
+
+
+# Instalar dependencias do Laravel
+RUN composer install --no-interaction
+
 
 # Create entrypoint script to run both API and queue worker
 RUN echo '#!/bin/bash\n\
