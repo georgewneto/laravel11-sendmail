@@ -45,7 +45,7 @@ COPY --chown=www:www . /var/www
 RUN chown -R www:www /var/www/storage/app/public
 RUN chmod -R 777 /var/www/storage/app/public
 
-RUN chmod -R 777 /var/www/storage/logs/laravel.log
+#RUN chmod -R 777 /var/www/storage/logs/laravel.log
 RUN chmod -R 777 /var/www/storage/framework/sessions/
 RUN chmod -R 777 /var/www/storage/framework/views/
 
