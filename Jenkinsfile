@@ -33,6 +33,15 @@ pipeline {
                     sh """
                         docker run -d --name ${APP_NAME} --restart unless-stopped -p 8006:8006 --env-file /home/georgewneto/Projetos/sendmail/.env ${IMAGE_NAME}
                     """
+
+                    // 3. Garante que o container subiu; se falhar, mostra logs para diagnóstico
+                    sh """
+                        if ! docker ps --format '{{.Names}}' | grep -w ${APP_NAME}; then
+                            echo 'Container nao iniciou corretamente. Logs:'
+                            docker logs ${APP_NAME} || true
+                            exit 1
+                        fi
+                    """
                 }
             }
         }
