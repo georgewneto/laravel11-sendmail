@@ -44,13 +44,8 @@
 </head>
 <body>
     <div class="container">
-<<<<<<< HEAD
-        <div class="header">
-            <img src="https://processoseletivo.itabuna.ba.gov.br/images/logomarca_amarelo_preto_horizontal.png" width="300" border="0" /><br />
-=======
         <div class="header" style="line-height: 2;">
-            <img src="https://publico.tributositabuna.com.br/files/images/logo_031.svg" width="300" border="0" /><br />
->>>>>>> 255294e745c75e8f77fdb4cff46c0a5f368ea878
+            <img src="https://processoseletivo.itabuna.ba.gov.br/images/logomarca_amarelo_preto_horizontal.png" width="300" border="0" /><br />
             @yield('header', 'Título do Email')
         </div>
 
