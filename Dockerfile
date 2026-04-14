@@ -37,16 +37,15 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
+# Add user for the application
+RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
+
+
 # Criar a pasta /var/www/storage/jwt com as permissões corretas
 RUN mkdir -p /var/www/storage/jwt && chown -R www:www /var/www/storage/jwt && chmod -R 777 /var/www/storage/jwt
 
-# Copia as chaves JWT para o container
-COPY /home/georgewneto/Projetos/sendmail/storage/jwt/jwt-private.key /var/www/storage/jwt/
-COPY /home/georgewneto/Projetos/sendmail/storage/jwt/jwt-public.key /var/www/storage/jwt/
+# As chaves JWT sao copiadas no deploy (Jenkins) para evitar depender de caminhos locais no build
 
-
-# Add user for the application
-RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy application files and set permissions
 COPY --chown=www:www . /var/www
