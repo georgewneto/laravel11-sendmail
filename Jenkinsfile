@@ -61,10 +61,10 @@ pipeline {
                 //sh "docker exec ${APP_NAME} chown -R www-data:www-data /var/www/storage/jwt"
 
                 // Cria a pasta de logs e o arquivo laravel.log
-                sh "docker exec ${APP_NAME} mkdir -p /var/www/storage/logs"
-                sh "docker exec ${APP_NAME} touch /var/www/storage/logs/laravel.log"
-                sh "docker exec ${APP_NAME} chmod 666 /var/www/storage/logs/laravel.log"
-                sh "docker exec ${APP_NAME} chown -R www-data:www-data /var/www/storage/logs"
+                //sh "docker exec ${APP_NAME} mkdir -p /var/www/storage/logs"
+                //sh "docker exec ${APP_NAME} touch /var/www/storage/logs/laravel.log"
+                //sh "docker exec ${APP_NAME} chmod 666 /var/www/storage/logs/laravel.log"
+                //sh "docker exec ${APP_NAME} chown -R www-data:www-data /var/www/storage/logs"
 
                 // Instala as dependências do Laravel
                 //sh "docker exec ${APP_NAME} composer install --no-interaction"
